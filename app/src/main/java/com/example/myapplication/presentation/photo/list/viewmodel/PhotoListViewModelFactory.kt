@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation.list.viewmodel
+package com.example.myapplication.presentation.photo.list.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

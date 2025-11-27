@@ -1,19 +1,21 @@
-package com.example.myapplication.presentation.list
+package com.example.myapplication.presentation.photo.list
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.data.remote.api.RetrofitClient
 import com.example.myapplication.data.repository.PhotoRepositoryImpl
 import com.example.myapplication.databinding.ActivityPhotoListBinding
 import com.example.myapplication.domain.usecase.GetPhotoListUseCase
-import com.example.myapplication.presentation.detail.PhotoDetailActivity
-import com.example.myapplication.presentation.list.adapter.PhotoListAdapter
-import com.example.myapplication.presentation.list.viewmodel.PhotoListViewModel
-import com.example.myapplication.presentation.list.viewmodel.PhotoListViewModelFactory
+import com.example.myapplication.presentation.photo.detail.PhotoDetailActivity
+import com.example.myapplication.presentation.photo.list.adapter.PhotoListAdapter
+import com.example.myapplication.presentation.photo.list.viewmodel.PhotoListViewModel
+import com.example.myapplication.presentation.photo.list.viewmodel.PhotoListViewModelFactory
+import kotlinx.coroutines.launch
 
 class PhotoListActivity : AppCompatActivity() {
 
@@ -26,6 +28,7 @@ class PhotoListActivity : AppCompatActivity() {
         binding = ActivityPhotoListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Initialize ViewModel with dependencies
         setupViewModel()
         setupRecyclerView()
         observeViewModel()
@@ -54,17 +57,17 @@ class PhotoListActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.photoList.observe(this) { photos ->
-            adapter.submitList(photos)
-        }
+        lifecycleScope.launch {
+            viewModel.uiState.collect { uiState ->
+                binding.progressBar.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
 
-        viewModel.isLoading.observe(this) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
+                uiState.photoList?.let { photos ->
+                    adapter.submitList(photos)
+                }
 
-        viewModel.error.observe(this) { error ->
-            binding.tvError.visibility = if (error != null) View.VISIBLE else View.GONE
-            binding.tvError.text = error
+                binding.tvError.visibility = if (uiState.error != null) View.VISIBLE else View.GONE
+                binding.tvError.text = uiState.error
+            }
         }
     }
 }
