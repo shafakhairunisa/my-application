@@ -10,12 +10,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.uitkit.MyApplicationTheme
+import com.example.myapplication.uikit.MyApplicationTheme
 
 @Composable
 fun SettingScreen(
-    viewModel: SettingViewModel,
-    onLogoutClick: () -> Unit
+    viewModel: SettingViewModel
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -55,7 +54,6 @@ fun SettingScreen(
                 Button(
                     onClick = {
                         viewModel.logout()
-                        onLogoutClick()
                     },
                     modifier = Modifier
                         .fillMaxWidth()

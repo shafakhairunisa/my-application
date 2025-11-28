@@ -19,7 +19,7 @@ import com.example.myapplication.data.local.PreferencesManager
 import com.example.myapplication.data.repository.AuthRepositoryImpl
 import com.example.myapplication.domain.usecase.LoginUseCase
 import com.example.myapplication.presentation.main.MainActivity
-import com.example.myapplication.uitkit.MyApplicationTheme
+import com.example.myapplication.uikit.MyApplicationTheme
 
 class LoginActivity : ComponentActivity() {
 

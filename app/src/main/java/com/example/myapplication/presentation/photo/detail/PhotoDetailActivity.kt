@@ -26,7 +26,7 @@ import com.example.myapplication.domain.model.PhotoDetailItem
 import com.example.myapplication.domain.usecase.GetPhotoDetailUseCase
 import com.example.myapplication.presentation.photo.detail.viewmodel.PhotoDetailViewModel
 import com.example.myapplication.presentation.photo.detail.viewmodel.PhotoDetailViewModelFactory
-import com.example.myapplication.uitkit.MyApplicationTheme
+import com.example.myapplication.uikit.MyApplicationTheme
 
 class PhotoDetailActivity : ComponentActivity() {
 

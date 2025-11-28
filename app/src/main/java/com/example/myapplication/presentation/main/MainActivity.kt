@@ -13,7 +13,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.R
+import kotlinx.coroutines.launch
 import com.example.myapplication.data.local.PreferencesManager
 import com.example.myapplication.data.repository.AuthRepositoryImpl
 import com.example.myapplication.domain.usecase.LogoutUseCase
@@ -22,7 +25,7 @@ import com.example.myapplication.presentation.login.LoginActivity
 import com.example.myapplication.presentation.setting.SettingScreen
 import com.example.myapplication.presentation.setting.SettingViewModel
 import com.example.myapplication.presentation.setting.SettingViewModelFactory
-import com.example.myapplication.uitkit.MyApplicationTheme
+import com.example.myapplication.uikit.MyApplicationTheme
 
 class MainActivity : FragmentActivity() {
 
@@ -42,14 +45,18 @@ class MainActivity : FragmentActivity() {
             MyApplicationTheme {
                 MainScreen(
                     activity = this,
-                    settingViewModel = settingViewModel,
-                    onLogout = {
-                        val intent = Intent(this, LoginActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        finish()
-                    }
+                    settingViewModel = settingViewModel
                 )
+            }
+        }
+
+        // Observe logout event
+        lifecycleScope.launch {
+            settingViewModel.logoutEvent.collect {
+                val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
             }
         }
     }
@@ -59,8 +66,7 @@ class MainActivity : FragmentActivity() {
 @Composable
 fun MainScreen(
     activity: FragmentActivity,
-    settingViewModel: SettingViewModel,
-    onLogout: () -> Unit
+    settingViewModel: SettingViewModel
 ) {
     var selectedTab by remember { mutableStateOf(0) }
 
@@ -98,10 +104,7 @@ fun MainScreen(
         Box(modifier = Modifier.padding(paddingValues)) {
             when (selectedTab) {
                 0 -> PhotoListFragmentContainer(activity = activity)
-                1 -> SettingScreen(
-                    viewModel = settingViewModel,
-                    onLogoutClick = onLogout
-                )
+                1 -> SettingScreen(viewModel = settingViewModel)
             }
         }
     }
@@ -116,12 +119,13 @@ fun PhotoListFragmentContainer(activity: FragmentActivity) {
             }
         },
         update = { view ->
-            // Add fragment only if not already added
             val fragmentManager = activity.supportFragmentManager
-            val existingFragment = fragmentManager.findFragmentById(R.id.photo_list_fragment_container)
+            val existingFragment = fragmentManager.findFragmentById(view.id)
+
+            // Always ensure fragment is added when this composable is active
             if (existingFragment == null) {
                 fragmentManager.beginTransaction()
-                    .replace(R.id.photo_list_fragment_container, PhotoListFragment())
+                    .replace(view.id, PhotoListFragment())
                     .commitNow()
             }
         },

@@ -20,7 +20,7 @@ import com.example.myapplication.data.repository.AuthRepositoryImpl
 import com.example.myapplication.domain.usecase.CheckLoginStatusUseCase
 import com.example.myapplication.presentation.login.LoginActivity
 import com.example.myapplication.presentation.main.MainActivity
-import com.example.myapplication.uitkit.MyApplicationTheme
+import com.example.myapplication.uikit.MyApplicationTheme
 
 class SplashScreenActivity : ComponentActivity() {
 

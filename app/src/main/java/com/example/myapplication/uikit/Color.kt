@@ -1,4 +1,4 @@
-package com.example.myapplication.uitkit
+package com.example.myapplication.uikit
 
 import androidx.compose.ui.graphics.Color
 
