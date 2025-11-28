@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation.detail
+package com.example.myapplication.presentation.photo.detail
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,15 +17,16 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
 import com.example.myapplication.data.remote.api.RetrofitClient
 import com.example.myapplication.data.repository.PhotoRepositoryImpl
 import com.example.myapplication.domain.model.PhotoDetailItem
 import com.example.myapplication.domain.usecase.GetPhotoDetailUseCase
-import com.example.myapplication.presentation.detail.viewmodel.PhotoDetailViewModel
-import com.example.myapplication.presentation.detail.viewmodel.PhotoDetailViewModelFactory
-import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.presentation.photo.detail.viewmodel.PhotoDetailViewModel
+import com.example.myapplication.presentation.photo.detail.viewmodel.PhotoDetailViewModelFactory
+import com.example.myapplication.uikit.MyApplicationTheme
 
 class PhotoDetailActivity : ComponentActivity() {
 
@@ -40,6 +41,7 @@ class PhotoDetailActivity : ComponentActivity() {
 
         val photoId = intent.getStringExtra(EXTRA_PHOTO_ID) ?: ""
 
+        // Initialize ViewModel with dependencies
         val repository = PhotoRepositoryImpl(RetrofitClient.apiService)
         val useCase = GetPhotoDetailUseCase(repository)
         val factory = PhotoDetailViewModelFactory(useCase)
@@ -180,3 +182,30 @@ fun InfoRow(label: String, value: String) {
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun PhotoDetailContentPreview() {
+    MyApplicationTheme {
+        PhotoDetailContent(
+            photoDetail = PhotoDetailItem(
+                id = "1",
+                author = "John Doe",
+                width = 1920,
+                height = 1080,
+                url = "https://unsplash.com/photos/sample",
+                downloadUrl = "https://picsum.photos/id/1/1920/1080"
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun InfoRowPreview() {
+    MyApplicationTheme {
+        InfoRow(
+            label = "Photo ID",
+            value = "12345"
+        )
+    }
+}
