@@ -1,4 +1,4 @@
-package com.example.myapplication.presentation.list.adapter
+package com.example.myapplication.presentation.photo.list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
