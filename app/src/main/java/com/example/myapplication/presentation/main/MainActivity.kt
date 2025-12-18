@@ -3,6 +3,7 @@ package com.example.myapplication.presentation.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -12,34 +13,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.R
 import kotlinx.coroutines.launch
-import com.example.myapplication.data.local.PreferencesManager
-import com.example.myapplication.data.repository.AuthRepositoryImpl
-import com.example.myapplication.domain.usecase.LogoutUseCase
 import com.example.myapplication.presentation.photo.list.PhotoListFragment
 import com.example.myapplication.presentation.login.LoginActivity
 import com.example.myapplication.presentation.setting.SettingScreen
 import com.example.myapplication.presentation.setting.SettingViewModel
-import com.example.myapplication.presentation.setting.SettingViewModelFactory
 import com.example.myapplication.uikit.MyApplicationTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
-    private lateinit var settingViewModel: SettingViewModel
+    private val settingViewModel: SettingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize ViewModel for Settings
-        val preferencesManager = PreferencesManager(this)
-        val authRepository = AuthRepositoryImpl(preferencesManager)
-        val logoutUseCase = LogoutUseCase(authRepository)
-        val factory = SettingViewModelFactory(logoutUseCase)
-        settingViewModel = ViewModelProvider(this, factory)[SettingViewModel::class.java]
 
         setContent {
             MyApplicationTheme {
@@ -120,17 +111,35 @@ fun PhotoListFragmentContainer(activity: FragmentActivity) {
         },
         update = { view ->
             val fragmentManager = activity.supportFragmentManager
-            val existingFragment = fragmentManager.findFragmentById(view.id)
+            val existingFragment = fragmentManager.findFragmentByTag("PhotoListFragment")
 
-            // Always ensure fragment is added when this composable is active
             if (existingFragment == null) {
+                // Fragment doesn't exist, create new one
                 fragmentManager.beginTransaction()
-                    .replace(view.id, PhotoListFragment())
-                    .commitNow()
+                    .add(view.id, PhotoListFragment(), "PhotoListFragment")
+                    .commit()
+            } else if (!existingFragment.isAdded || existingFragment.isDetached) {
+                // Fragment exists but not attached, attach it
+                fragmentManager.beginTransaction()
+                    .attach(existingFragment)
+                    .commit()
             }
         },
         modifier = Modifier.fillMaxSize()
     )
+
+    DisposableEffect(Unit) {
+        onDispose {
+            // Detach fragment when composable leaves composition
+            val fragmentManager = activity.supportFragmentManager
+            val fragment = fragmentManager.findFragmentByTag("PhotoListFragment")
+            if (fragment != null && fragment.isAdded) {
+                fragmentManager.beginTransaction()
+                    .detach(fragment)
+                    .commit()
+            }
+        }
+    }
 }
 
 @Preview(showBackground = true)

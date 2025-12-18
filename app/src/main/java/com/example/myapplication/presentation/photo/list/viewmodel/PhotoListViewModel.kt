@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.domain.model.PhotoItem
 import com.example.myapplication.domain.usecase.GetPhotoListUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class PhotoListUiState(
     val isLoading: Boolean = false,
@@ -15,7 +17,8 @@ data class PhotoListUiState(
     val error: String? = null
 )
 
-class PhotoListViewModel(
+@HiltViewModel
+class PhotoListViewModel @Inject constructor(
     private val getPhotoListUseCase: GetPhotoListUseCase
 ) : ViewModel() {
 

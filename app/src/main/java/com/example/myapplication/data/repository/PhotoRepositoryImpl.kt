@@ -4,8 +4,9 @@ import com.example.myapplication.data.remote.api.PicsumApiService
 import com.example.myapplication.domain.model.PhotoItem
 import com.example.myapplication.domain.model.PhotoDetailItem
 import com.example.myapplication.domain.repository.PhotoRepository
+import javax.inject.Inject
 
-class PhotoRepositoryImpl(
+class PhotoRepositoryImpl @Inject constructor(
     private val apiService: PicsumApiService
 ) : PhotoRepository {
 
