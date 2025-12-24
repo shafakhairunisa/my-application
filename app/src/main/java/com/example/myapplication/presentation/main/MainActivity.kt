@@ -3,43 +3,33 @@ package com.example.myapplication.presentation.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.R
 import kotlinx.coroutines.launch
-import com.example.myapplication.data.local.PreferencesManager
-import com.example.myapplication.data.repository.AuthRepositoryImpl
-import com.example.myapplication.domain.usecase.LogoutUseCase
 import com.example.myapplication.presentation.photo.list.PhotoListFragment
 import com.example.myapplication.presentation.login.LoginActivity
 import com.example.myapplication.presentation.setting.SettingScreen
 import com.example.myapplication.presentation.setting.SettingViewModel
-import com.example.myapplication.presentation.setting.SettingViewModelFactory
 import com.example.myapplication.uikit.MyApplicationTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
-    private lateinit var settingViewModel: SettingViewModel
+    private val settingViewModel: SettingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize ViewModel for Settings
-        val preferencesManager = PreferencesManager(this)
-        val authRepository = AuthRepositoryImpl(preferencesManager)
-        val logoutUseCase = LogoutUseCase(authRepository)
-        val factory = SettingViewModelFactory(logoutUseCase)
-        settingViewModel = ViewModelProvider(this, factory)[SettingViewModel::class.java]
 
         setContent {
             MyApplicationTheme {
@@ -119,60 +109,39 @@ fun PhotoListFragmentContainer(activity: FragmentActivity) {
             }
         },
         update = { view ->
-            val fragmentManager = activity.supportFragmentManager
-            val existingFragment = fragmentManager.findFragmentById(view.id)
-
-            // Always ensure fragment is added when this composable is active
-            if (existingFragment == null) {
-                fragmentManager.beginTransaction()
-                    .replace(view.id, PhotoListFragment())
-                    .commitNow()
+            // Only perform fragment transactions if activity is not destroyed
+            if (!activity.isDestroyed && !activity.isFinishing) {
+                val fragmentManager = activity.supportFragmentManager
+                val existingFragment = fragmentManager.findFragmentByTag("PhotoListFragment")
+                // Fragment doesn't exist, create new one
+                if (existingFragment == null) {
+                    try {
+                        fragmentManager.beginTransaction()
+                            .replace(view.id, PhotoListFragment(), "PhotoListFragment")
+                            .commitNowAllowingStateLoss()
+                    } catch (_: IllegalStateException) {
+                        // Activity state is saved, ignore
+                    }
+                }
             }
         },
         modifier = Modifier.fillMaxSize()
     )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-    MyApplicationTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            var selectedTab by remember { mutableStateOf(0) }
-
-            Scaffold(
-                bottomBar = {
-                    NavigationBar {
-                        NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    painter = painterResource(android.R.drawable.ic_menu_gallery),
-                                    contentDescription = "List"
-                                )
-                            },
-                            label = { Text("List of Picsum") },
-                            selected = selectedTab == 0,
-                            onClick = { selectedTab = 0 }
-                        )
-                        NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    painter = painterResource(android.R.drawable.ic_menu_preferences),
-                                    contentDescription = "Settings"
-                                )
-                            },
-                            label = { Text("Setting") },
-                            selected = selectedTab == 1,
-                            onClick = { selectedTab = 1 }
-                        )
+    DisposableEffect(Unit) {
+        onDispose {
+            // Clean up fragment when composable leaves composition
+            if (!activity.isDestroyed && !activity.isFinishing) {
+                try {
+                    val fragmentManager = activity.supportFragmentManager
+                    val fragment = fragmentManager.findFragmentByTag("PhotoListFragment")
+                    if (fragment != null && fragment.isAdded) {
+                        fragmentManager.beginTransaction()
+                            .remove(fragment)
+                            .commitNowAllowingStateLoss()
                     }
-                }
-            ) { paddingValues ->
-                Box(modifier = Modifier.padding(paddingValues)) {
-                    Text("Content Area")
+                } catch (_: IllegalStateException) {
+                    // Activity state is saved, ignore
                 }
             }
         }

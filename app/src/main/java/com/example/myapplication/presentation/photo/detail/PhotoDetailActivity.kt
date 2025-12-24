@@ -3,6 +3,7 @@ package com.example.myapplication.presentation.photo.detail
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -18,34 +19,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModelProvider
 import coil.compose.AsyncImage
-import com.example.myapplication.data.remote.api.RetrofitClient
-import com.example.myapplication.data.repository.PhotoRepositoryImpl
 import com.example.myapplication.domain.model.PhotoDetailItem
-import com.example.myapplication.domain.usecase.GetPhotoDetailUseCase
 import com.example.myapplication.presentation.photo.detail.viewmodel.PhotoDetailViewModel
-import com.example.myapplication.presentation.photo.detail.viewmodel.PhotoDetailViewModelFactory
 import com.example.myapplication.uikit.MyApplicationTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PhotoDetailActivity : ComponentActivity() {
 
     companion object {
         const val EXTRA_PHOTO_ID = "extra_photo_id"
     }
 
-    private lateinit var viewModel: PhotoDetailViewModel
+    private val viewModel: PhotoDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val photoId = intent.getStringExtra(EXTRA_PHOTO_ID) ?: ""
 
-        // Initialize ViewModel with dependencies
-        val repository = PhotoRepositoryImpl(RetrofitClient.apiService)
-        val useCase = GetPhotoDetailUseCase(repository)
-        val factory = PhotoDetailViewModelFactory(useCase)
-        viewModel = ViewModelProvider(this, factory)[PhotoDetailViewModel::class.java]
 
         setContent {
             MyApplicationTheme {

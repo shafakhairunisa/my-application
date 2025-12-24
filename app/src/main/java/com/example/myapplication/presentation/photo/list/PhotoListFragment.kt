@@ -6,24 +6,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myapplication.data.remote.api.RetrofitClient
-import com.example.myapplication.data.repository.PhotoRepositoryImpl
 import com.example.myapplication.databinding.FragmentPhotoListBinding
-import com.example.myapplication.domain.usecase.GetPhotoListUseCase
 import com.example.myapplication.presentation.photo.detail.PhotoDetailActivity
 import com.example.myapplication.presentation.photo.list.adapter.PhotoListAdapter
 import com.example.myapplication.presentation.photo.list.viewmodel.PhotoListViewModel
-import com.example.myapplication.presentation.photo.list.viewmodel.PhotoListViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class PhotoListFragment : Fragment() {
 
     private var _binding: FragmentPhotoListBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: PhotoListViewModel
+    private val viewModel: PhotoListViewModel by viewModels()
     private lateinit var adapter: PhotoListAdapter
 
     override fun onCreateView(
@@ -38,20 +36,12 @@ class PhotoListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize ViewModel with dependencies
-        setupViewModel()
         setupRecyclerView()
         observeViewModel()
 
         viewModel.loadPhotoList()
     }
 
-    private fun setupViewModel() {
-        val repository = PhotoRepositoryImpl(RetrofitClient.apiService)
-        val useCase = GetPhotoListUseCase(repository)
-        val factory = PhotoListViewModelFactory(useCase)
-        viewModel = ViewModelProvider(this, factory)[PhotoListViewModel::class.java]
-    }
 
     private fun setupRecyclerView() {
         adapter = PhotoListAdapter { photo ->
