@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentContainerView
@@ -110,19 +109,20 @@ fun PhotoListFragmentContainer(activity: FragmentActivity) {
             }
         },
         update = { view ->
-            val fragmentManager = activity.supportFragmentManager
-            val existingFragment = fragmentManager.findFragmentByTag("PhotoListFragment")
-
-            if (existingFragment == null) {
+            // Only perform fragment transactions if activity is not destroyed
+            if (!activity.isDestroyed && !activity.isFinishing) {
+                val fragmentManager = activity.supportFragmentManager
+                val existingFragment = fragmentManager.findFragmentByTag("PhotoListFragment")
                 // Fragment doesn't exist, create new one
-                fragmentManager.beginTransaction()
-                    .add(view.id, PhotoListFragment(), "PhotoListFragment")
-                    .commit()
-            } else if (!existingFragment.isAdded || existingFragment.isDetached) {
-                // Fragment exists but not attached, attach it
-                fragmentManager.beginTransaction()
-                    .attach(existingFragment)
-                    .commit()
+                if (existingFragment == null) {
+                    try {
+                        fragmentManager.beginTransaction()
+                            .replace(view.id, PhotoListFragment(), "PhotoListFragment")
+                            .commitNowAllowingStateLoss()
+                    } catch (_: IllegalStateException) {
+                        // Activity state is saved, ignore
+                    }
+                }
             }
         },
         modifier = Modifier.fillMaxSize()
@@ -130,58 +130,18 @@ fun PhotoListFragmentContainer(activity: FragmentActivity) {
 
     DisposableEffect(Unit) {
         onDispose {
-            // Detach fragment when composable leaves composition
-            val fragmentManager = activity.supportFragmentManager
-            val fragment = fragmentManager.findFragmentByTag("PhotoListFragment")
-            if (fragment != null && fragment.isAdded) {
-                fragmentManager.beginTransaction()
-                    .detach(fragment)
-                    .commit()
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-    MyApplicationTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            var selectedTab by remember { mutableStateOf(0) }
-
-            Scaffold(
-                bottomBar = {
-                    NavigationBar {
-                        NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    painter = painterResource(android.R.drawable.ic_menu_gallery),
-                                    contentDescription = "List"
-                                )
-                            },
-                            label = { Text("List of Picsum") },
-                            selected = selectedTab == 0,
-                            onClick = { selectedTab = 0 }
-                        )
-                        NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    painter = painterResource(android.R.drawable.ic_menu_preferences),
-                                    contentDescription = "Settings"
-                                )
-                            },
-                            label = { Text("Setting") },
-                            selected = selectedTab == 1,
-                            onClick = { selectedTab = 1 }
-                        )
+            // Clean up fragment when composable leaves composition
+            if (!activity.isDestroyed && !activity.isFinishing) {
+                try {
+                    val fragmentManager = activity.supportFragmentManager
+                    val fragment = fragmentManager.findFragmentByTag("PhotoListFragment")
+                    if (fragment != null && fragment.isAdded) {
+                        fragmentManager.beginTransaction()
+                            .remove(fragment)
+                            .commitNowAllowingStateLoss()
                     }
-                }
-            ) { paddingValues ->
-                Box(modifier = Modifier.padding(paddingValues)) {
-                    Text("Content Area")
+                } catch (_: IllegalStateException) {
+                    // Activity state is saved, ignore
                 }
             }
         }
