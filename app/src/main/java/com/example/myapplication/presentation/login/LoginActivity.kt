@@ -8,6 +8,8 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -16,20 +18,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.presentation.main.MainActivity
+import com.example.myapplication.presentation.setting.SettingViewModel
+import com.example.myapplication.uikit.AppBarHeight
 import com.example.myapplication.uikit.MyApplicationTheme
+import com.example.myapplication.uikit.Spacing
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.ui.res.stringResource
+import com.example.myapplication.R
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
 
     private val viewModel: LoginViewModel by viewModels()
+    private val settingViewModel: SettingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
         setContent {
-            MyApplicationTheme {
+            val isDarkMode by settingViewModel.isDarkMode.collectAsState()
+
+            MyApplicationTheme(darkTheme = isDarkMode) {
                 LoginScreen(
                     onLoginClick = {
                         viewModel.login()
@@ -54,33 +64,33 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
+                .padding(Spacing.l),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Welcome to Photo App",
+                text = stringResource(R.string.welcome_message),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = Spacing.m)
             )
 
             Text(
-                text = "Please login to continue",
+                text = stringResource(R.string.login_subtitle),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 32.dp)
+                modifier = Modifier.padding(bottom = Spacing.xl)
             )
 
             Button(
                 onClick = onLoginClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .height(AppBarHeight)
             ) {
                 Text(
-                    text = "Login",
+                    text = stringResource(R.string.login),
                     fontSize = 18.sp
                 )
             }
@@ -88,13 +98,26 @@ fun LoginScreen(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(
+    name = "Light Mode",
+    showBackground = true
+)
 @Composable
-fun LoginScreenPreview() {
-    MyApplicationTheme {
-        LoginScreen(
-            onLoginClick = {}
-        )
+fun LoginScreenLightPreview() {
+    MyApplicationTheme(darkTheme = false) {
+        LoginScreen(onLoginClick = {})
     }
 }
+
+@Preview(
+    name = "Dark Mode",
+    showBackground = true
+)
+@Composable
+fun LoginScreenDarkPreview() {
+    MyApplicationTheme(darkTheme = true) {
+        LoginScreen(onLoginClick = {})
+    }
+}
+
 

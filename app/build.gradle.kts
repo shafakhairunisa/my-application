@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.swiperefreshlayout)
 
     // Retrofit
     implementation(libs.retrofit)
@@ -85,6 +86,9 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+
+    // Lingver
+    implementation(libs.github.lingver)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

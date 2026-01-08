@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Aplikasi Saya</string>
+    <string name="photo_list_title">Daftar Foto</string>
+
+    <!-- Setting Screen -->
+    <string name="settings">Pengaturan</string>
+    <string name="dark_mode">Mode Gelap</string>
+    <string name="enabled">Aktif</string>
+    <string name="disabled">Nonaktif</string>
+    <string name="language">Bahasa</string>
+    <string name="english">Inggris</string>
+    <string name="bahasa_indonesia">Bahasa Indonesia</string>
+    <string name="logout">Keluar</string>
+    <string name="select_language">Pilih Bahasa</string>
+
+    <!-- Login Screen -->
+    <string name="welcome_message">Selamat Datang di Aplikasi Foto</string>
+    <string name="login_subtitle">Silakan masuk untuk melanjutkan</string>
+    <string name="login">Masuk</string>
+
+    <!-- Photo Detail Screen -->
+    <string name="photo_detail">Detail Foto</string>
+    <string name="author">Penulis</string>
+    <string name="photo_id">ID Foto</string>
+    <string name="dimensions">Dimensi</string>
+    <string name="url">URL</string>
+    <string name="unknown_error">Terjadi kesalahan yang tidak diketahui</string>
+    <string name="photo_by">Foto oleh %1$s</string>
+
+</resources>

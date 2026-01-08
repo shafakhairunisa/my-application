@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="green_secondary">#38885F</color>
+
+    <color name="light_primary">#202020</color>
+    <color name="light_secondary">#434955</color>
+    <color name="light_secondary_dark">#434955</color>
+    <color name="light_semi_transparent">#47000000</color>
+    <color name="light_subtle">#303030</color>
+    <color name="light_dark">#A5ACC0</color>
+
+    <color name="dark_primary">#FFFFFF</color>
+    <color name="dark_secondary">#EEEEEE</color>
+    <color name="dark_semi_transparent">#B3FFFFFF</color>
+    <color name="dark_light">#797E86</color>
+    <color name="dark_thrid">#f8f9f9</color>
+    <color name="dark_subtle">#f8f9f9</color>
+    <color name="dark_accent">#B2B4B6</color>
+    <color name="text_primary">#FFFFFFFF</color>
+
+    <!-- Material 3 Dark Theme Colors - CORRECT NAMING -->
+    <color name="md_theme_dark_primary">#82E180</color>
+    <color name="md_theme_dark_on_primary">#000000</color>
+    <color name="md_theme_dark_background">#202020</color>
+    <color name="md_theme_dark_on_background">#FFFFFF</color>
+    <color name="md_theme_dark_surface">#202020</color>
+    <color name="md_theme_dark_on_surface">#FFFFFF</color>
+    <color name="md_theme_dark_surface_variant">#303030</color>
+    <color name="md_theme_dark_on_surface_variant">#EEEEEE</color>
+    <color name="md_theme_dark_error">#EA5455</color>
+
+</resources>
