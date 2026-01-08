@@ -23,6 +23,8 @@ import com.example.myapplication.uikit.AppBarHeight
 import com.example.myapplication.uikit.MyApplicationTheme
 import com.example.myapplication.uikit.Spacing
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.ui.res.stringResource
+import com.example.myapplication.R
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
@@ -67,7 +69,7 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Welcome to Photo App",
+                text = stringResource(R.string.welcome_message),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -75,7 +77,7 @@ fun LoginScreen(
             )
 
             Text(
-                text = "Please login to continue",
+                text = stringResource(R.string.login_subtitle),
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(bottom = Spacing.xl)
@@ -88,7 +90,7 @@ fun LoginScreen(
                     .height(AppBarHeight)
             ) {
                 Text(
-                    text = "Login",
+                    text = stringResource(R.string.login),
                     fontSize = 18.sp
                 )
             }

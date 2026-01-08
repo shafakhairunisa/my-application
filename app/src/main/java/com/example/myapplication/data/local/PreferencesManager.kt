@@ -47,7 +47,7 @@ class PreferencesManager(context: Context) {
         private const val KEY_LANGUAGE = "language"
 
         const val LANGUAGE_ENGLISH = "en"
-        const val LANGUAGE_INDONESIAN = "id"
+        const val LANGUAGE_INDONESIAN = "in"
     }
 }
 

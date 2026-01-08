@@ -15,11 +15,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.AsyncImage
+import com.example.myapplication.R
 import com.example.myapplication.domain.model.PhotoDetailItem
 import com.example.myapplication.presentation.photo.detail.viewmodel.PhotoDetailViewModel
 import com.example.myapplication.presentation.setting.SettingViewModel
@@ -87,7 +89,7 @@ fun PhotoDetailScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Photo Detail",
+                        text = stringResource(R.string.photo_detail),
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
@@ -107,7 +109,7 @@ fun PhotoDetailScreen(
                     }
                     uiState.error != null -> {
                         Text(
-                            text = uiState.error ?: "Unknown error",
+                            text = uiState.error ?: stringResource(R.string.unknown_error),
                             color = MaterialTheme.colorScheme.error,
                             modifier = Modifier
                                 .align(Alignment.Center)
@@ -134,7 +136,7 @@ fun PhotoDetailContent(photoDetail: PhotoDetailItem) {
         // Image
         AsyncImage(
             model = photoDetail.downloadUrl,
-            contentDescription = "Photo by ${photoDetail.author}",
+            contentDescription = stringResource(R.string.photo_by, photoDetail.author),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp),
@@ -145,7 +147,7 @@ fun PhotoDetailContent(photoDetail: PhotoDetailItem) {
 
         // Author
         Text(
-            text = "Author",
+            text = stringResource(R.string.author),
             fontSize = 14.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -159,13 +161,16 @@ fun PhotoDetailContent(photoDetail: PhotoDetailItem) {
         Spacer(modifier = Modifier.height(Spacing.m))
 
         // Photo ID
-        InfoRow(label = "Photo ID", value = photoDetail.id)
+        InfoRow(
+            label = stringResource(R.string.photo_id),
+            value = photoDetail.id
+        )
 
         Spacer(modifier = Modifier.height(Spacing.xs))
 
         // Dimensions
         InfoRow(
-            label = "Dimensions",
+            label = stringResource(R.string.dimensions),
             value = "${photoDetail.width} x ${photoDetail.height}"
         )
 
@@ -173,7 +178,7 @@ fun PhotoDetailContent(photoDetail: PhotoDetailItem) {
 
         // URL
         Text(
-            text = "URL",
+            text = stringResource(R.string.url),
             fontSize = 14.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

@@ -37,9 +37,14 @@ class PhotoListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        setupSwipeRefresh()  // ADD THIS LINE
         observeViewModel()
 
-        viewModel.loadPhotoList()
+        // REPLACE: viewModel.loadPhotoList()
+        // WITH THESE 3 LINES:
+        if (savedInstanceState == null || adapter.itemCount == 0) {
+            viewModel.loadPhotoList()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -55,10 +60,18 @@ class PhotoListFragment : Fragment() {
         }
     }
 
+    // ADD THIS NEW FUNCTION
+    private fun setupSwipeRefresh() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.loadPhotoList()
+        }
+    }
+
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 binding.progressBar.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
+                binding.swipeRefreshLayout.isRefreshing = uiState.isLoading  // ADD THIS LINE
 
                 uiState.photoList?.let { photos ->
                     adapter.submitList(photos)
