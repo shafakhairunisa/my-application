@@ -1,10 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">@color/green_primary</color>
+    <color name="colorPrimaryDark">@color/green_secondary</color>
+    <color name="colorAccent">@color/blue_light</color>
+
+    <color name="green_primary">#82E180</color>
+    <color name="green_secondary">#42b67b</color>
+    <color name="green_light">#aae37a</color>
+    <color name="green_subtle">#F0FAF4</color>
+
+    <color name="dark_primary">#000000</color>
+    <color name="dark_secondary">#434955</color>
+    <color name="dark_thrid">#626262</color>
+    <color name="dark_semi_transparent">#47000000</color>
+    <color name="dark_light">#797E86</color>
+    <color name="dark_subtle">#afb0c8</color>
+    <color name="dark_accent">#A5ACC0</color>
+
+    <color name="light_primary">#FFFFFF</color>
+    <color name="light_secondary">#EEEEEE</color>
+    <color name="light_secondary_dark">#d4d5e1</color>
+    <color name="light_semi_transparent">#B3FFFFFF</color>
+    <color name="light_more_transparent">#40FFFFFF</color>
+    <color name="light_subtle">#f8f9f9</color>
+    <color name="light_dark">#B2B4B6</color>
+
+    <color name="blue_primary">#4285f4</color>
+    <color name="blue_secondary">#00A2E8</color>
+    <color name="blue_light">#2face2</color>
+
+    <color name="purple_primary">#6610F2</color>
+    <color name="purple_dark">#656071</color>
+
+    <color name="pink_primary">#FF5F72</color>
+    <color name="pink_secondary">#e63869</color>
+
+    <color name="orange_primary">#F97C22</color>
+
+    <color name="yellow_primary">#EDB219</color>
+
+    <color name="gold">#FFDCCA87</color>
+
+    <color name="transparent">#00FFFFFF</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="text_primary">#434955</color>
+    <color name="text_secondary">#82868B</color>
+    <color name="secondary_white">#d4d5e1</color>
+
+    <color name="teal_extended">#20C997</color>
+
+    <!-- Material 3 Theme Colors -->
+    <color name="md_theme_light_primary">#82E180</color>
+    <color name="md_theme_light_on_primary">#FFFFFF</color>
+    <color name="md_theme_light_background">#FFFFFF</color>
+    <color name="md_theme_light_on_background">#434955</color>
+    <color name="md_theme_light_surface">#FFFFFF</color>
+    <color name="md_theme_light_on_surface">#434955</color>
+    <color name="md_theme_light_surface_variant">#f8f9f9</color>
+    <color name="md_theme_light_on_surface_variant">#82868B</color>
+    <color name="md_theme_light_error">#EA5455</color>
+
+    <color name="md_theme_dark_primary">#82E180</color>
+    <color name="md_theme_dark_on_primary">#000000</color>
+    <color name="md_theme_dark_background">#202020</color>
+    <color name="md_theme_dark_on_background">#FFFFFF</color>
+    <color name="md_theme_dark_surface">#202020</color>
+    <color name="md_theme_dark_on_surface">#FFFFFF</color>
+    <color name="md_theme_dark_surface_variant">#303030</color>
+    <color name="md_theme_dark_on_surface_variant">#EEEEEE</color>
+    <color name="md_theme_dark_error">#EA5455</color>
 </resources>

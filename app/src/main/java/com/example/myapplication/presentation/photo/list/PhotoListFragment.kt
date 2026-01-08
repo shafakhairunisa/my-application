@@ -42,7 +42,6 @@ class PhotoListFragment : Fragment() {
         viewModel.loadPhotoList()
     }
 
-
     private fun setupRecyclerView() {
         adapter = PhotoListAdapter { photo ->
             val intent = Intent(requireContext(), PhotoDetailActivity::class.java)
@@ -76,4 +75,3 @@ class PhotoListFragment : Fragment() {
         _binding = null
     }
 }
-

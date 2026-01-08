@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,13 +27,34 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
     private val settingViewModel: SettingViewModel by viewModels()
+    private var isThemeBeingApplied = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         setContent {
-            MyApplicationTheme {
+            val isDarkMode by settingViewModel.isDarkMode.collectAsState()
+
+            // Apply theme change when dark mode changes
+            LaunchedEffect(isDarkMode) {
+                if (!isThemeBeingApplied) {
+                    isThemeBeingApplied = true
+                    val nightMode = if (isDarkMode) {
+                        AppCompatDelegate.MODE_NIGHT_YES
+                    } else {
+                        AppCompatDelegate.MODE_NIGHT_NO
+                    }
+
+                    if (AppCompatDelegate.getDefaultNightMode() != nightMode) {
+                        AppCompatDelegate.setDefaultNightMode(nightMode)
+                        // Activity will recreate automatically
+                    } else {
+                        isThemeBeingApplied = false
+                    }
+                }
+            }
+
+            MyApplicationTheme(darkTheme = isDarkMode) {
                 MainScreen(
                     activity = this,
                     settingViewModel = settingViewModel
